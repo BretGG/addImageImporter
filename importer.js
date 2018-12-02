@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var readline = require('readline');
+var pathFormatter = require('path');
 var fs = require('fs');
 var csvParser = require('csv-parser');
 
@@ -104,7 +105,7 @@ function requestCSVPath() {
 // Returns string with path entered
 function requestFileFolderPath(){
     return new Promise((resolve, reject) => {
-        rl.question('Enter path to files (use \\ delimiter): ', (input) => {
+        rl.question('Enter path to files: ', (input) => {
             resolve(input);
         });
     });
@@ -131,7 +132,7 @@ function parseCSV(path) {
     return new Promise((resolve, reject) => {
         var dataLines = [];
 
-        fs.createReadStream(path)
+        fs.createReadStream(pathFormatter.normalize(path))
         .pipe(csvParser())
         .on('data', (data) => dataLines.push(data))
         .on('end', () => {
@@ -147,19 +148,15 @@ function parseCSV(path) {
 function getFilePaths(path, depth) {
     let files = [];
 
-    let newPath = '/';
-    let splitPath = path.split('\\');
-    for (var i = splitPath.length - depth - 1; i < splitPath.length - 1; i++) {
-        if (i == splitPath.length - depth - 1){
-            newPath += splitPath[i];
-        } else {
-            newPath += "/" + splitPath[i];
-        }
+    let newPath = pathFormatter.sep;
+    let splitPath = path.split(pathFormatter.sep);
+    for (var i = splitPath.length - depth; i < splitPath.length; i++) {
+        newPath = pathFormatter.join(newPath, splitPath[i]);
     }
 
     return new Promise((resolve, reject) => {
-        fs.readdirSync(path).forEach(file => {
-            files.push(newPath + '/' + file); 
+        fs.readdirSync(pathFormatter.normalize(path)).forEach(file => {
+            files.push(newPath + pathFormatter.sep + file); 
           })
         resolve(files);
     });
