@@ -156,7 +156,9 @@ function getFilePaths(path, depth) {
 
     return new Promise((resolve, reject) => {
         fs.readdirSync(pathFormatter.normalize(path)).forEach(file => {
-            files.push(newPath + pathFormatter.sep + file); 
+            if (!(/(^|\/)\.[^\/\.]/g).test(file)) {
+              files.push(newPath + pathFormatter.sep + file); 
+            }
           })
         resolve(files);
     });
