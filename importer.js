@@ -4,12 +4,14 @@ var fs = require('fs');
 var csvParser = require('csv-parser');
 
 // Starting database connection
-mongoose.connect('mongodb://localhost/anywear')
+function connect(databaseName){
+  mongoose.connect(`mongodb://localhost/${databaseName}`, { useNewUrlParser: true })
   .then(() => {
       console.log("Connected to mongo...\n");
       begin()
-    })
+   })
   .catch(err => console.log("Failed connection to mongo ", err));
+}
 
 // Setting up input
 const rl = readline.createInterface({
@@ -34,11 +36,11 @@ function begin(){
             var buildObjectsPromise = buildObjects(values[0], values[1]);
 
             buildObjectsPromise.then((data) => {
-                console.log(values[3]);
                 var saving = pushData(data, input.objectName);
 
                 saving.then(() => {
                     console.log("Finished!");
+                    // process.exit();
                 })
             });
         });
@@ -102,7 +104,7 @@ function requestCSVPath() {
 // Returns string with path entered
 function requestFileFolderPath(){
     return new Promise((resolve, reject) => {
-        rl.question('Enter path to files: ', (input) => {
+        rl.question('Enter path to files (use \\ delimiter): ', (input) => {
             resolve(input);
         });
     });
@@ -114,6 +116,12 @@ function requestObjectName(){
         rl.question('Enter name of object to be saved: ', (input) => {
             resolve(input);
         });
+    });
+}
+
+function setdataBaseName() {
+    rl.question("Enter name of database: ", (input) => {
+        connect(input);
     });
 }
 
@@ -141,7 +149,7 @@ function getFilePaths(path, depth) {
 
     let newPath = '/';
     let splitPath = path.split('\\');
-    for (var i = splitPath.length - depth - 1; i < splitPath.length; i++) {
+    for (var i = splitPath.length - depth - 1; i < splitPath.length - 1; i++) {
         if (i == splitPath.length - depth - 1){
             newPath += splitPath[i];
         } else {
@@ -161,10 +169,10 @@ function getFilePaths(path, depth) {
 function pushData(data, objectName) {
     return new Promise((resolve, refect) => {
       var thingSchema = new mongoose.Schema({}, { strict: false });
-      console.log("object name: " + objectName)
       var DataObject = mongoose.model(objectName, thingSchema);
       data.forEach(async (toSave) => {
           var object = new DataObject(toSave);
+        //   console.log(object);
           await object.save();
       })
 
@@ -182,5 +190,4 @@ function buildObjects(csvData, fileData) {
     });
 }
 
-begin();
-
+setdataBaseName();
