@@ -5,6 +5,8 @@ var csvParser = require('csv-parser');
 const userInterface = require('./userInterface');
 const mongoHandler = require('./mongoHandler');
 
+console.log("something");
+console.log('hmmm');
 
 // Making sure exceptions get logged
 process.on('uncaughtException', function (exception) {
@@ -12,9 +14,16 @@ process.on('uncaughtException', function (exception) {
 });
 
 // Handling shutdowns
-process.on('SIGTERM', () => {
+process.on('SIGINT', () => {
     console.log('Closing server connection...');
-    mongoHandler.close();
+    // mongoHandler.close();
+    console.log('Bye!');
+});
+
+// Handling shutdowns
+process.on('exit', () => {
+    console.log('Closing server connection...');
+    // mongoHandler.close();
     console.log('Bye!');
 });
 
@@ -24,8 +33,14 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-function mainLoop(){
-    
+async function mainLoop() {
+    await userInterface.mainMenu(menuChoiceHandler);
+
+    process.exit();
+};
+
+function menuChoiceHandler(answers) {
+    console.log(answers.menuOption);
 };
 
 function begin(){
@@ -182,5 +197,5 @@ function buildObjects(csvData, fileData) {
     });
 }
 
-userInterface.mainMenu();
-// userInterface.askPath("something");
+console.log('here');
+mainLoop();

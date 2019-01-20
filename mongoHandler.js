@@ -4,7 +4,7 @@ module.exports = {
     // Starting database connection
     // TODO: Create function header
     connect: (url, dbName) => {
-        MongoClient.connect(url, function(err, client))
+      //  MongoClient.connect(url, function(err, client) {
             mongoose.connect(`mongodb://localhost/${databaseName}`, { useNewUrlParser: true })
             .then(() => {
                 console.log("Connected to mongo...\n");

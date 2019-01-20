@@ -7,14 +7,15 @@ const bottomBar = new inquirer.ui.BottomBar();
 // The master list of menu options (What will be asked with main menu)
 const mainMenuOptions = [
     'one',
-    'two'
+    'two',
+    'quit'
 ];
 
 // TODO: explain file
 module.exports = {
 
     // TODO: add function header
-    mainMenu: async () => {
+    mainMenu: async (callback) => {
         clear();
 
         const figletConfig = {
@@ -31,7 +32,7 @@ module.exports = {
             choices: mainMenuOptions
         };
         
-        inquirer.prompt(menu, (answer) => {console.log(answer); return answer;});
+        await inquirer.prompt(menu).then((answers) => {callback(answers)});
     },
 
     // TODO: add function header
@@ -52,4 +53,3 @@ module.exports = {
     // }
 
 }
-
