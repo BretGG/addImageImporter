@@ -5,7 +5,10 @@ const inquirer = require('inquirer');
 const bottomBar = new inquirer.ui.BottomBar();
 
 // The master list of menu options (What will be asked with main menu)
-const menuOptions
+const mainMenuOptions = [
+    'one',
+    'two'
+];
 
 // TODO: explain file
 module.exports = {
@@ -25,10 +28,10 @@ module.exports = {
             type: 'list',
             name: 'menuOption',
             message: 'What would you like to do?',
-            choices: ['one', 'two']
+            choices: mainMenuOptions
         };
         
-        inquirer.prompt(menu, (answer) => {console.log(answer)});
+        inquirer.prompt(menu, (answer) => {console.log(answer); return answer;});
     },
 
     // TODO: add function header

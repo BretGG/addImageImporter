@@ -1,22 +1,32 @@
-var mongoose = require('mongoose');
 var readline = require('readline');
 var pathFormatter = require('path');
 var fs = require('fs');
 var csvParser = require('csv-parser');
 const userInterface = require('./userInterface');
+const mongoHandler = require('./mongoHandler');
 
 
+// Making sure exceptions get logged
 process.on('uncaughtException', function (exception) {
   console.log(exception);
 });
 
-
+// Handling shutdowns
+process.on('SIGTERM', () => {
+    console.log('Closing server connection...');
+    mongoHandler.close();
+    console.log('Bye!');
+});
 
 // Setting up input
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout
 });
+
+function mainLoop(){
+    
+};
 
 function begin(){
     var parsingPromises = [];
