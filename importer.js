@@ -3,6 +3,14 @@ var readline = require('readline');
 var pathFormatter = require('path');
 var fs = require('fs');
 var csvParser = require('csv-parser');
+const userInterface = require('./UserInterface');
+
+
+process.on('uncaughtException', function (exception) {
+  console.log(exception); // to see your exception details in the console
+  // if you are on production, maybe you can send the exception details to your
+  // email as well ?
+});
 
 // Starting database connection
 function connect(databaseName){
@@ -189,4 +197,5 @@ function buildObjects(csvData, fileData) {
     });
 }
 
-setdataBaseName();
+userInterface.mainMenu();
+// userInterface.askPath("something");
