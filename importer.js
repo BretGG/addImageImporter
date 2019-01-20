@@ -3,24 +3,14 @@ var readline = require('readline');
 var pathFormatter = require('path');
 var fs = require('fs');
 var csvParser = require('csv-parser');
-const userInterface = require('./UserInterface');
+const userInterface = require('./userInterface');
 
 
 process.on('uncaughtException', function (exception) {
-  console.log(exception); // to see your exception details in the console
-  // if you are on production, maybe you can send the exception details to your
-  // email as well ?
+  console.log(exception);
 });
 
-// Starting database connection
-function connect(databaseName){
-  mongoose.connect(`mongodb://localhost/${databaseName}`, { useNewUrlParser: true })
-  .then(() => {
-      console.log("Connected to mongo...\n");
-      begin()
-   })
-  .catch(err => console.log("Failed connection to mongo ", err));
-}
+
 
 // Setting up input
 const rl = readline.createInterface({
@@ -169,21 +159,6 @@ function getFilePaths(path, depth) {
             }
           })
         resolve(files);
-    });
-}
-
-// Push data to database
-function pushData(data, objectName) {
-    return new Promise((resolve, refect) => {
-      var thingSchema = new mongoose.Schema({}, { strict: false });
-      var DataObject = mongoose.model(objectName, thingSchema);
-      data.forEach(async (toSave) => {
-          var object = new DataObject(toSave);
-        //   console.log(object);
-          await object.save();
-      })
-
-      resolve();
     });
 }
 

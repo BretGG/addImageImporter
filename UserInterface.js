@@ -4,6 +4,8 @@ const chalk = require('chalk');
 const inquirer = require('inquirer');
 const bottomBar = new inquirer.ui.BottomBar();
 
+// The master list of menu options (What will be asked with main menu)
+const menuOptions
 
 // TODO: explain file
 module.exports = {
@@ -27,7 +29,6 @@ module.exports = {
         };
         
         inquirer.prompt(menu, (answer) => {console.log(answer)});
-        
     },
 
     // TODO: add function header
